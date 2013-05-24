@@ -3,6 +3,35 @@
 import RPi.GPIO as GPIO
 from multiprocessing import Process
 import time
+import json
+
+class Api:
+
+    def __init__(self, url, token):
+        self.url = url
+        self.token = token
+
+    def coffee(self):
+        payload = self.prepare_payload('coffees')
+        self.send_payload(payload)
+
+    def sandwich(self):
+        payload = self.prepare_payload('sandwiches')
+        self.send_payload(payload)
+
+    def prepare_payload(self, stat_name):
+        data = {
+            'token': self.token,
+            'stats': {
+                'name': stat_name
+            }
+        }
+        payload = json.dumps(data)
+        return payload
+
+    def send_payload(self, payload):
+        #TODO: send this fo real
+        print self.url, payload
 
 
 class Clicker:
