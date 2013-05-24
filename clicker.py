@@ -43,19 +43,19 @@ class Button:
 
     def target_f(self):
         while True:
-        counter = 0
-        while counter < 4:
+            counter = 0
+            while counter < 4:
                 if GPIO.input(self.channel) == GPIO.HIGH:
                     if counter > 0:
                         counter -= 1
                 else:
                     counter += 1
-        time.sleep(0.05)
-        GPIO.wait_for_edge(self.channel, GPIO.RISING)
-        GPIO.output(self.led_pin, GPIO.HIGH)
-        self.f()
-        time.sleep(1)
-        GPIO.output(self.led_pin, GPIO.LOW)
+            time.sleep(0.05)
+            GPIO.wait_for_edge(self.channel, GPIO.RISING)
+            GPIO.output(self.led_pin, GPIO.HIGH)
+            self.f()
+            time.sleep(1)
+            GPIO.output(self.led_pin, GPIO.LOW)
 
     def start(self):
         self.p.start()
