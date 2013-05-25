@@ -7,6 +7,7 @@ import requests
 import json
 import ConfigParser
 
+
 class Api:
 
     def __init__(self, url, token):
@@ -59,7 +60,8 @@ class Clicker:
     L_CHAN_1 = 16
     L_CHAN_2 = 18
 
-    def __init__(self):
+    def __init__(self, api):
+        self.api = api
         GPIO.setmode(GPIO.BOARD)
 
     def start_working(self):
@@ -72,10 +74,10 @@ class Clicker:
             b.join()
 
     def coffee_f(self):
-        print("coffee")
+        api.coffee()
 
     def sandwich_f(self):
-        print("sandwich")
+        api.sandwich()
 
 
 class Button:
@@ -110,6 +112,9 @@ class Button:
     def join(self):
         self.p.join()
 
+
 if __name__ == '__main__':
-    clicker = Clicker()
+    config = Config('config.cfg')
+    api = Api(config.api_url(), config.api_token())
+    clicker = Clicker(api)
     clicker.start_working()
