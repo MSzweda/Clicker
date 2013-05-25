@@ -5,6 +5,7 @@ from multiprocessing import Process
 import time
 import requests
 import json
+import ConfigParser
 
 class Api:
 
@@ -34,6 +35,21 @@ class Api:
         headers = {'Content-Type': 'application/json'}
         req = requests.post(self.url, data=payload, headers=headers)
         return req
+
+
+class Config:
+
+    def __init__(self, filepath):
+        self.config = ConfigParser.ConfigParser()
+        self.config.read(filepath)
+
+    def api_url(self):
+        url = self.config.get('API', 'url')
+        return url
+
+    def api_token(self):
+        token = self.config.get('API', 'token')
+        return token
 
 
 class Clicker:
