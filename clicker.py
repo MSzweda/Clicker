@@ -85,11 +85,20 @@ class Button:
                         counter -= 1
                 else:
                     counter += 1
-            time.sleep(0.05)
+                time.sleep(0.05)
             GPIO.wait_for_edge(self.channel, GPIO.RISING)
             GPIO.output(self.led_pin, GPIO.HIGH)
-            self.f()
-            time.sleep(1)
+            try:
+                time_start = time.time()
+                self.f()
+                duration = time.time() - time_start
+                if duration <= 1:
+                    time.sleep(1-duration)
+            except:
+                for _ in range(0,20):
+                    GPIO.output(self.led_pin, GPIO.HIGH)
+                    time.sleep(0.1)
+                    GPIO.output(self.led_pin, GPIO.LOW)
             GPIO.output(self.led_pin, GPIO.LOW)
 
     def start(self):
