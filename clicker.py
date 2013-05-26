@@ -55,29 +55,15 @@ class Config:
 
 class Clicker:
 
-    B_CHAN_1 = 11
-    B_CHAN_2 = 13
-    L_CHAN_1 = 16
-    L_CHAN_2 = 18
-
-    def __init__(self, api):
-        self.api = api
+    def __init__(self):
+        self.b_list = []
         GPIO.setmode(GPIO.BOARD)
 
     def start_working(self):
-        b_coffee = Button(Clicker.B_CHAN_1, Clicker.L_CHAN_1, self.coffee_f)
-        b_sandwich = Button(Clicker.B_CHAN_2, Clicker.L_CHAN_2, self.sandwich_f)
-        b_list = [b_coffee, b_sandwich]
-        for b in  b_list:
+        for b in  self.b_list:
             b.start()
-        for b in  b_list:
+        for b in  self.b_list:
             b.join()
-
-    def coffee_f(self):
-        api.coffee()
-
-    def sandwich_f(self):
-        api.sandwich()
 
 
 class Button:
@@ -99,11 +85,20 @@ class Button:
                         counter -= 1
                 else:
                     counter += 1
-            time.sleep(0.05)
+                time.sleep(0.05)
             GPIO.wait_for_edge(self.channel, GPIO.RISING)
             GPIO.output(self.led_pin, GPIO.HIGH)
-            self.f()
-            time.sleep(1)
+            try:
+                time_start = time.time()
+                self.f()
+                duration = time.time() - time_start
+                if duration <= 1:
+                    time.sleep(1-duration)
+            except:
+                for _ in range(0,20):
+                    GPIO.output(self.led_pin, GPIO.HIGH)
+                    time.sleep(0.1)
+                    GPIO.output(self.led_pin, GPIO.LOW)
             GPIO.output(self.led_pin, GPIO.LOW)
 
     def start(self):
@@ -117,4 +112,7 @@ if __name__ == '__main__':
     config = Config('config.cfg')
     api = Api(config.api_url(), config.api_token())
     clicker = Clicker(api)
+    b_coffee = Button(11, 16, api.coffee)
+    b_sandwich = Button(13, 18, api.sandwich)
+    clicker.b_list = [b_coffee, b_sandwich]
     clicker.start_working()
