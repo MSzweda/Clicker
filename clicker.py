@@ -111,7 +111,7 @@ class Button:
 if __name__ == '__main__':
     config = Config('config.cfg')
     api = Api(config.api_url(), config.api_token())
-    clicker = Clicker(api)
+    clicker = Clicker()
     b_coffee = Button(11, 16, api.coffee)
     b_sandwich = Button(13, 18, api.sandwich)
     clicker.b_list = [b_coffee, b_sandwich]
